@@ -5,19 +5,26 @@
 
 #BackEnd
 
-- cd vào BE:
+#cd vào BE:
     cd BackEnd
 
-- Chạy source BE:
+#Tải node_module
+    npm install
+
+#Chạy source BE:
     npm run start
 
 
-FrontEnd (Mở trong một terminal khác) :
+#FrontEnd (Mở trong một terminal khác) :
 
-- cd vào FE:
+#cd vào FE:
     cd frontend
 
-- Chạy source FE:
+#Tải node_module
+    npm install
+
+#Chạy source FE:
     npm run serve
 
-- Truy cập vào URL: localhost:8080
+#Truy cập vào URL: 
+    localhost:8080

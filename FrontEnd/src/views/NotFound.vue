@@ -13,8 +13,12 @@
   </script>
   
   <style scoped>
+
+ 
   body{
     text-align: center;
+    align-items: center;
+    
     padding: 100px 20px;
     color: #333;
   }
@@ -22,11 +26,13 @@
   body h1 {
     font-size: 3em;
     margin-bottom: 20px;
+    margin-left: 200px;
   }
   
   body p {
     font-size: 1.2em;
     margin-bottom: 30px;
+    margin-left: 200px;
   }
   
   .home-link {
@@ -37,9 +43,12 @@
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    margin-left: 200px;
   }
   
   .home-link:hover {
     background-color: #2c8f6f;
   }
+
+  
   </style>
