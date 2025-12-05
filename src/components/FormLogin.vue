@@ -1,20 +1,23 @@
 <template>
+  
   <form @submit.prevent="handleLogin">
+    
     <label>
-      Username
+      <div class="label-form">Username</div>
       <input v-model="username" type="text" placeholder="Username" />
     </label>
-
     <label>
-      Password
+      <div class="label-form">Password</div>
       <input v-model="password" type="password" placeholder="Password" />
     </label>
-
-    <button type="submit">Đăng nhập</button>
+    <br>
+    <button class="btnLogin" type="submit">Đăng nhập</button>
   </form>
+  
 </template>
 
 <script>
+
 export default {
 name: 'FormLogin',
 data() {
@@ -49,11 +52,14 @@ methods: {
       if (response.ok && data.success) {
         alert(`Đăng nhập thành công với user [ ${data.role} ]`);
 
-        // ✔ Lưu role trước
+        // Lưu role vào localStorage
         localStorage.setItem('role', data.role);
         localStorage.setItem('username', data.username);
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('token', data.token);
+        
 
-        // ✔ Sau đó mới redirect
+        // redirect
         if (data.role === 'Sinh_vien') this.$router.push('/student/dashboard');
         else if (data.role === 'Giang_vien') this.$router.push('/teacher/dashboard');
         else if (data.role === 'PĐT') this.$router.push('/admin/dashboard');
@@ -82,8 +88,8 @@ gap: 12px;
 
 input {
 width: 100%;
-padding: 8px;
-margin-top: 4px;
+padding: 15px;
+margin-top: 8px;
 }
 
 button {

@@ -6,25 +6,35 @@
         <nav>
           <router-link to="/teacher/dashboard">Dashboard</router-link>
           <router-link to="/teacher/materials">Quản lý tài liệu</router-link>
-          <router-link to="/teacher/scores">Nhập điểm</router-link>
+          <!-- <router-link to="/teacher/scores">Nhập điểm</router-link> -->     
           <router-link to="/teacher/notifications">Thông báo môn học</router-link>
           <router-link to="/teacher/profile">Trang cá nhân</router-link>
+          <router-link to="/teacher/schedule">Lịch dạy</router-link>
         </nav>
       </aside>
   
-      <!-- Main Content -->
-      <main class="content">
-        <header class="header">
-          <h1>Teacher Portal</h1>
-        </header>
-  
-        <section class="page-content">
-          <router-view></router-view>
-        </section>
-      </main>
+      <router-view></router-view>
     </div>
   </template>
   
+<script>
+import { apiFetch } from "@/services/jwt.js";
+export default {
+  name: "TeacherLayout",
+   data() {
+    return {
+      teacher: null
+    };
+  },
+  async mounted() {
+    const userId = localStorage.getItem("user_id");
+    // Gọi API teachers kèm token
+    const data = await apiFetch(`/teachers/${userId}`, { method: "GET" });
+    this.teacher = data;
+  }
+};
+</script>
+
   <style>
   .teacher-layout {
     display: flex;

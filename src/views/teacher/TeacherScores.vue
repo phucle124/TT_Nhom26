@@ -63,49 +63,55 @@
   </template>
   
   <script>
-  export default {
-    name: "TeacherScores",
-  
-    data() {
-      return {
-        students: [
-          {
-            id: "SV001",
-            name: "Nguyễn Văn A",
-            attendance: 0,
-            midterm: 0,
-            final: 0,
-            total: 0,
-          },
-          {
-            id: "SV002",
-            name: "Trần Thị B",
-            attendance: 0,
-            midterm: 0,
-            final: 0,
-            total: 0,
-          },
-        ],
-      };
+export default {
+  name: "TeacherScores",
+  data() {
+    return {
+      students: [],
+      showDialog: false,
+      editingStudent: {}
+    };
+  },
+  mounted() {
+    this.loadScores();
+  },
+  methods: {
+    async loadScores() {
+      const res = await fetch("http://localhost:8888/api/scores");
+      this.students = await res.json();
     },
-  
-    methods: {
-      updateTotal(student) {
-        const a = student.attendance || 0;
-        const m = student.midterm || 0;
-        const f = student.final || 0;
-  
-        // Công thức có thể thay đổi (hiện tại: CC:20% GK:30% CK:50%)
-        student.total = (a * 0.2 + m * 0.3 + f * 0.5).toFixed(1);
-      },
-  
-      saveScores() {
-        console.log("Dữ liệu điểm đã lưu:", this.students);
-        alert("Đã lưu điểm thành công!");
-      },
+    updateTotal(student) {
+      const a = student.attendance || 0;
+      const m = student.midterm || 0;
+      const f = student.final || 0;
+      student.total = (a * 0.2 + m * 0.3 + f * 0.5).toFixed(1);
     },
-  };
-  </script>
+    openDialog(student) {
+      this.editingStudent = { ...student };
+      this.showDialog = true;
+    },
+    cancelEdit() {
+      this.showDialog = false;
+      this.editingStudent = {};
+    },
+    async saveEdit() {
+      const { student_id, subject_id, attendance, midterm, final } = this.editingStudent;
+      const res = await fetch("http://localhost:8888/api/scores", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ student_id, subject_id, attendance, midterm, final })
+      });
+      if (res.ok) {
+        alert("Điểm đã được lưu!");
+        this.showDialog = false;
+        this.loadScores();
+      } else {
+        alert("Có lỗi khi lưu điểm!");
+      }
+    }
+  }
+};
+</script>
   
   <style>
   .title {

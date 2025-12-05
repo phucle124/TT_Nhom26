@@ -1,6 +1,10 @@
 <template>
     <div class="login-page">
-      <h2>Chào mừng đến với hệ thống quản lí thông tin sinh viên</h2>
+      <div class="switch-wrapper">
+      <ToggleSwitch />
+    </div>
+
+      <h2 class="display-5 fw-bolder mb-5 text-light" >Chào mừng đến với hệ thống quản lí thông tin sinh viên</h2>
       <br>
       
       <FormLogin />  <!-- Gọi form đăng nhập thực sự -->
@@ -16,7 +20,7 @@
   }
   </script>
   
-  <style scoped>
+  <style >
   .login-page {
     display: flex;
     flex-direction: column;

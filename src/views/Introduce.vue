@@ -123,20 +123,11 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Thêm CSS tùy chỉnh cho Bootstrap */
+<style>
 .blog-container {
-  line-height: 1.8; 
-  /* Giới hạn độ rộng như max-w-4xl của Tailwind */
-  max-width: 800px; 
+  width: 1200px; 
 }
-/* Đảm bảo các list items không bị thụt lề quá nhiều */
-.list-unstyled {
-    padding-left: 0;
-}
-/* Style cho code block để dễ nhìn hơn */
-pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
+
+
 </style>
+

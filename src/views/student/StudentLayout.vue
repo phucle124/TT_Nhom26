@@ -25,6 +25,24 @@
     </div>
   </template>
   
+<script>
+import { apiFetch } from "@/services/jwt.js";
+export default {
+  name: "StudentLayout",
+  data() {
+    return {
+      student: null
+    };
+  },
+  async mounted() {
+    const userId = localStorage.getItem("user_id");
+    // Gọi API students kèm token
+    const data = await apiFetch(`/students/${userId}`, { method: "GET" });
+    this.student = data;
+  }
+};
+</script>
+
   <style>
   .student-layout {
     display: flex;

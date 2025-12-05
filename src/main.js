@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'   //Truyen tat ca component vao
 import router from './router' //Truyen index.js vao
 
+
 Vue.config.productionTip = false
 
 new Vue({

@@ -27,16 +27,16 @@
       };
     },
     methods: {
-      send() {
-        if (!this.title || !this.content) return;
-        this.notifications.push({
-          id: Date.now(),
-          title: this.title,
-          content: this.content,
-        });
-        this.title = "";
-        this.content = "";
-      },
+  //     send() {
+  //       if (!this.title || !this.content) return;
+  //       this.notifications.push({
+  //         id: Date.now(),
+  //         title: this.title,
+  //         content: this.content,
+  //       });
+  //       this.title = "";
+  //       this.content = "";
+  //     },
     },
   };
   </script>

@@ -12,14 +12,10 @@
   </template>
   
   <script>
-  export default {
-    name: "StudentDashboard",
-  };
-  </script>
   
-  <style>
-  ul li {
-    margin: 10px 0;
-  }
-  </style>
+  export default {
+      name: "StudentDashboard",
+  };
+</script>
+
   

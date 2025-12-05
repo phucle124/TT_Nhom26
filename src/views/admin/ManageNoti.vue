@@ -1,26 +1,44 @@
 <template>
-  <div class="p-5">
-    <h2>Quản lý thông báo</h2>
+  <div class="container py-4">
+    <h2 class="mb-4">Quản lý thông báo</h2>
 
-    <input v-model="title" placeholder="Tiêu đề..." />
-    <textarea v-model="content" placeholder="Nội dung..."></textarea>
+    <!-- Form nhập thông báo -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">Tiêu đề</label>
+          <input v-model="name" type="text" class="form-control" placeholder="Nhập tiêu đề..." />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nội dung</label>
+          <textarea v-model="content" class="form-control" rows="3" placeholder="Nhập nội dung..."></textarea>
+        </div>
+        <button @click="sendNotification" class="btn btn-primary">
+          Gửi thông báo
+        </button>
+      </div>
+    </div>
 
-    <select v-model="type">
-      <option value="Cá nhân">Cá nhân</option>
-      <option value="Môn học">Môn học</option>
-      <option value="Toàn trường">Toàn trường</option>
-    </select>
-
-    <button @click="sendNotification">Gửi thông báo</button>
-
-    <ul>
-      <li v-for="n in notifications" :key="n.notification_id">
-        {{ n.name }} - {{ n.type }} - {{ n.create_day }}
+    <!-- Danh sách thông báo -->
+    <h4 class="mb-3">Danh sách thông báo</h4>
+    <ul class="list-group">
+      <li v-for="n in notifications" :key="n.notification_id" class="list-group-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <strong>{{ n.name }}</strong>
+            <div class="text-muted small">{{ n.content }}</div>
+          </div>
+          <span class="badge bg-info text-dark">
+            {{ n.type }} - {{ formatDate(n.create_day) }}
+          </span>
+        </div>
       </li>
     </ul>
   </div>
 </template>
-  
+
+
+
 <script>
 export default {
   data() {
@@ -28,7 +46,6 @@ export default {
       notifications: [],
       name: "",
       content: "",
-      type: "Toàn trường",
       subject_id: null
     };
   },
@@ -41,19 +58,26 @@ export default {
       this.notifications = await res.json();
     },
     async sendNotification() {
-      await fetch("/api/notifications", {
+      const userId = localStorage.getItem("user_id"); // phải là "1" cho admin
+      await fetch("http://localhost:8888/api/notifications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.name,
           content: this.content,
-          type: this.type,
-          subject_id: this.subject_id
+          type: "Toàn trường",   // gán cứng
+          subject_id: null,
+          user_id: userId
         })
       });
       this.loadNotifications();
+      this.name = "";
+      this.content = "";
+    },
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleString("vi-VN");
     }
   }
 };
 </script>
-  
+
