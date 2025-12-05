@@ -11,6 +11,22 @@ router.get('/users', (req, res) => {
     });
 });
 
+//Lấy tất cả user là sinh viên
+router.get('/users/students', (req, res) => {
+  const query = `SELECT user_id, username 
+                 FROM users 
+                 WHERE role = 'Sinh_vien'`;
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Lỗi truy vấn:', err);
+      return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
+    }
+    res.json(results);
+  });
+});
+
+
+
 
 //Thêm user
 router.post('/users', (req, res) => {
