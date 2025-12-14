@@ -15,6 +15,21 @@ router.get('/subjects', (req, res) => {
   });
 });
 
+//Lấy môn học theo mã khoa
+router.get('/subjects/department/:departmentId', (req, res) => {
+  const departmentId = req.params.departmentId;
+  const query = `
+    SELECT s.subject_id, s.subject_name, s.credit, d.department_name
+    FROM subjects s
+    JOIN departments d ON s.department_id = d.department_id
+    WHERE s.department_id = ?
+  `;
+  db.query(query, [departmentId], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+});
+
 // Thêm môn học
 router.post('/subjects', (req, res) => {
   const { subject_name, credit, department_id } = req.body;

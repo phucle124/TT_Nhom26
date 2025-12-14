@@ -1,26 +1,31 @@
 <template>
-  <div class="p-5">
+  <div class="container py-4">
     <h2>Quản lý thông báo</h2>
 
-    <input v-model="title" placeholder="Tiêu đề..." />
-    <textarea v-model="content" placeholder="Nội dung..."></textarea>
+    <!-- Form nhập -->
+    <div class="card">
+      <div class="card-body">
+        
+          <label class="form-label">Tiêu đề</label>
+          <input v-model="name" type="text" class="form-control" placeholder="Nhập tiêu đề..." />
+       
+        
+          <label class="form-label">Nội dung</label>
+          <textarea v-model="content" class="form-control" rows="3" placeholder="Nhập nội dung..."></textarea>
+        
+        <button @click="sendNotification" class="btn btn-primary">
+          Gửi thông báo
+        </button>
+      </div>
+    </div>
 
-    <select v-model="type">
-      <option value="Cá nhân">Cá nhân</option>
-      <option value="Môn học">Môn học</option>
-      <option value="Toàn trường">Toàn trường</option>
-    </select>
-
-    <button @click="sendNotification">Gửi thông báo</button>
-
-    <ul>
-      <li v-for="n in notifications" :key="n.notification_id">
-        {{ n.name }} - {{ n.type }} - {{ n.create_day }}
-      </li>
-    </ul>
+    
+    
   </div>
 </template>
-  
+
+
+
 <script>
 export default {
   data() {
@@ -28,7 +33,6 @@ export default {
       notifications: [],
       name: "",
       content: "",
-      type: "Toàn trường",
       subject_id: null
     };
   },
@@ -41,19 +45,26 @@ export default {
       this.notifications = await res.json();
     },
     async sendNotification() {
-      await fetch("/api/notifications", {
+      const userId = localStorage.getItem("user_id"); 
+      await fetch("http://localhost:8888/api/notifications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: this.name,
           content: this.content,
-          type: this.type,
-          subject_id: this.subject_id
+          type: "Toàn trường",   //gán cứng
+          subject_id: null,
+          user_id: userId
         })
       });
       this.loadNotifications();
+      this.name = "";
+      this.content = "";
+    },
+    formatDate(dateStr) {
+      return new Date(dateStr).toLocaleString("vi-VN");
     }
   }
 };
 </script>
-  
+

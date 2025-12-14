@@ -85,10 +85,10 @@ function XacMinhToken(req, res, next) {
   });
 }
 
-// Route kiểm tra token hợp lệ
-router.get('/validate-token', XacMinhToken, (req, res) => {
-  res.json({ success: true, message: 'Token hợp lệ', user: req.user });
-});
+// // Route kiểm tra token hợp lệ
+// router.get('/validate-token', XacMinhToken, (req, res) => {
+//   res.json({ success: true, message: 'Token hợp lệ', user: req.user });
+// });
 
 
 module.exports = { router , XacMinhToken };

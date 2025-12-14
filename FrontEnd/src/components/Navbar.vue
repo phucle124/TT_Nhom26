@@ -1,22 +1,11 @@
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary w-100">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid justify-content-between align-items-center">
 
       <!-- Logo -->
       <router-link to="/" class="logo-text">EDUPORTAL</router-link>
 
-      <!-- Toggle button -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#mainNavbar"
-        aria-controls="mainNavbar"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      
 
       <!-- MENU -->
       <div class="collapse navbar-collapse justify-content-end" id="mainNavbar">
@@ -33,6 +22,17 @@
         </ul>
       </div>
     </div>
+    <!-- Toggle button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar"
+        aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
   </nav>
 </template>
 
@@ -43,6 +43,16 @@ export default {
 </script>
 
 <style scoped>
+
+.navbar {
+  position: absolute;
+  width: 80%;
+  margin: 20px auto;
+  left: 0;
+  right: 0;
+  z-index: 3;
+}
+
 /* Logo */
 .logo-text {
   font-size: 1.8rem;
@@ -71,12 +81,15 @@ export default {
 
 /* Background */
 .bg-body-tertiary {
-  background-color: #f8f9fa;
+  background-color: #b6bbc0 !important;
+  border-radius: 30px;
 }
 
 /* Add spacing so menu không dính vào trên */
 .container-fluid {
   padding-top: 10px;
   padding-bottom: 10px;
+  
+  width: 95%;
 }
 </style>

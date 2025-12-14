@@ -1,20 +1,23 @@
 <template>
+  
   <form @submit.prevent="handleLogin">
+    
     <label>
-      Username
+      <div class="label-form">Username</div>
       <input v-model="username" type="text" placeholder="Username" />
     </label>
-
     <label>
-      Password
+      <div class="label-form">Password</div>
       <input v-model="password" type="password" placeholder="Password" />
     </label>
-
-    <button type="submit">Đăng nhập</button>
+    <br>
+    <button class="btnLogin" type="submit">Đăng nhập</button>
   </form>
+  
 </template>
 
 <script>
+
 export default {
 name: 'FormLogin',
 data() {
@@ -74,7 +77,7 @@ methods: {
 }
 </script>
 
-<style scoped>
+<style>
 form {
 max-width: 280px;
 margin: 50px auto;
@@ -85,8 +88,8 @@ gap: 12px;
 
 input {
 width: 100%;
-padding: 8px;
-margin-top: 4px;
+padding: 15px;
+margin-top: 8px;
 }
 
 button {

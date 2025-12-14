@@ -23,7 +23,9 @@ export default {
   },
   methods: {
     toggleDark() {
+      
       document.body.setAttribute("color-scheme", this.isDark ? "dark" : "light")
+      
     }
   }
 }
@@ -118,12 +120,19 @@ input:checked + .slider .label-dark {
 }
 
 
+[color-scheme="dark"],
+[color-scheme="light"] {
+  transition:  all 0.5s ease, color 0.5s ease;
+}
 
 
 /* Dark / Light scheme */
 [color-scheme="dark"] {
-  background-color: #0d1b2a;
+  background-color: #032032;
   color: #e0e0e0 ;
+  min-height: 100vh;
+  
+  
 }
 
 [color-scheme="dark"] .sidebar {
@@ -135,8 +144,9 @@ input:checked + .slider .label-dark {
   color: aquamarine !important; /* dùng cờ ưu tiên (specificity) hơn màu chung */
 }
 
-[color-scheme="dark"] .navbar {
-  background-color: #0d1b2a; /* nền tối */
+
+[color-scheme="dark"] .bg-body-tertiary {
+  background-color: #F5F5F5 !important; /* nền sáng cho navbar */
 }
 
 [color-scheme="dark"] .navbar a {
@@ -146,6 +156,11 @@ input:checked + .slider .label-dark {
 
 [color-scheme="dark"] .navbar a:hover {
   color: #04fcca; /* accent khi hover */
+}
+
+[color-scheme="dark"]  p {
+  color: #b0e0e6 !important; /* chữ sáng cho đoạn văn */
+  
 }
 
 [color-scheme="dark"] .btn-login {
@@ -163,16 +178,38 @@ input:checked + .slider .label-dark {
     justify-content: center;
     height: 100vh;
     background: linear-gradient(to right, #003454, #000b26);
-    color: white;
+    /* color: white; */
+  }
+
+
+  [color-scheme="dark"] input {
+    /* border:  solid 1px #00cad1; */
+    border: solid 2px #00acb2;
+    background-color: #000d2f;
+    color: rgb(0, 255, 68);
+  }
+
+  [color-scheme="dark"] .label-form {
+    font-weight: bold;
+  }
+
+  
+
+  [color-scheme="dark"] .btnLogin{
+    background: #006a98;
+    color: #00f9ff;
+    font-weight: bold;
   }
 
   [color-scheme="dark"] .login-page h2 {
     color: aquamarine !important;
   }
 
-/* [color-scheme="light"] {
-  background-color: #ffffff;
+[color-scheme="light"] {
+  background-color: #f8f9fa; /* nền mặc định cho Home, Introduce */
   color: #000000;
-} */
+  min-height: 100vh;
+}
+
  
 </style>

@@ -123,11 +123,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .blog-container {
   width: 1200px; 
+  margin-top: 120px;
 }
 
-
 </style>
-

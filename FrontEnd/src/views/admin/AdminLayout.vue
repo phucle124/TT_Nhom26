@@ -10,8 +10,7 @@
         <router-link to="/admin/manage-subjects">Quản lí môn học</router-link>
         <router-link to="/admin/manage-scores">Quản lí điểm</router-link>
         <router-link to="/admin/manage-notification">Quản lí thông báo</router-link>
-        <router-link to="/admin/teacher-subjects">Quản lí môn giảng viên dạy</router-link>
-        <router-link to="/admin/student-classes-departments">Quản lí sinh viên</router-link>
+
       </nav>
     </aside>
 
@@ -62,11 +61,7 @@
   font-weight: bold;
 }
 
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+
 
 .header {
   background: white;

@@ -31,15 +31,17 @@
     <button @click="addSchedule">Thêm</button>
 
     <table border="1" cellpadding="10">
-      <tr>
-        <th>Môn học</th>
-        <th>Phòng</th>
-        <th>Ngày</th>
-        <th>Bắt đầu</th>
-        <th>Kết thúc</th>
-        <th>Lớp</th>
-        <th>Giảng viên</th>
-      </tr>
+      <thead>
+        <tr>
+          <th>Môn học</th>
+          <th>Phòng</th>
+          <th>Ngày</th>
+          <th>Bắt đầu</th>
+          <th>Kết thúc</th>
+          <th>Lớp</th>
+          <th>Giảng viên</th>
+        </tr>
+      </thead>
       <tr v-for="s in schedules" :key="s.schedule_id">
         <td>{{ s.subject_name }}</td>
         <td>{{ s.room }}</td>
@@ -115,7 +117,7 @@ export default {
       });
       if (res.ok) {
         alert("Đã thêm lịch học!");
-        // reset form
+        
         this.subject_id = "";
         this.room = "";
         this.dayOfWeek = "";

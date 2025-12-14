@@ -9,6 +9,7 @@
           <!-- <router-link to="/teacher/scores">Nhập điểm</router-link> -->     
           <router-link to="/teacher/notifications">Thông báo môn học</router-link>
           <router-link to="/teacher/profile">Trang cá nhân</router-link>
+          <router-link to="/teacher/schedule">Lịch dạy</router-link>
         </nav>
       </aside>
   

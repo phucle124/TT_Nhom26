@@ -33,6 +33,72 @@ router.get('/teacher-subjects/:teacher_id', (req, res) => {
   });
 });
 
+// Lấy lịch dạy của giảng viên từ user_id
+router.get('/schedules/lecturer/byUser/:user_id', (req, res) => {
+  const userId = req.params.user_id;
+
+  // B1: Lấy teacher_id từ bảng teachers
+  const queryTeacher = `SELECT teacher_id FROM teachers WHERE user_id = ?`;
+
+  db.query(queryTeacher, [userId], (err, teacherResults) => {
+    if (err) return res.status(500).json({ error: err });
+    if (teacherResults.length === 0) {
+      return res.status(404).json({ error: 'Teacher not found' });
+    }
+
+    const teacherId = teacherResults[0].teacher_id;
+
+    // B2: Lấy lịch dạy từ bảng schedules theo teacher_id
+    const querySchedules = `
+      SELECT sch.schedule_id, sub.subject_name, sch.day, sch.start_time, sch.end_time, sch.room, c.class_name
+      FROM schedules sch
+      JOIN subjects sub ON sch.subject_id = sub.subject_id
+      JOIN classes c ON sch.class_id = c.class_id
+      WHERE sch.teacher_id = ?
+    `;
+
+    db.query(querySchedules, [teacherId], (err, scheduleResults) => {
+      if (err) return res.status(500).json({ error: err });
+      res.json(scheduleResults);
+    });
+  });
+});
+
+// Lấy lịch học của sinh viên từ user_id
+router.get('/schedules/student/byUser/:user_id', (req, res) => {
+  const userId = req.params.user_id;
+
+  // B1: Lấy class_id từ bảng students
+  const queryStudent = `SELECT class_id FROM students WHERE user_id = ?`;
+  db.query(queryStudent, [userId], (err, studentResults) => {
+    if (err) return res.status(500).json({ error: err });
+    if (studentResults.length === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    const classId = studentResults[0].class_id;
+
+    // B2: Lấy lịch học từ bảng schedules theo class_id
+    const querySchedules = `
+      SELECT sch.schedule_id,
+             sub.subject_name,
+             sch.day,
+             sch.start_time,
+             sch.end_time,
+             sch.room,
+             t.full_name AS teacher_name
+      FROM schedules sch
+      JOIN subjects sub ON sch.subject_id = sub.subject_id
+      JOIN teachers t ON sch.teacher_id = t.teacher_id
+      WHERE sch.class_id = ?
+    `;
+    db.query(querySchedules, [classId], (err, scheduleResults) => {
+      if (err) return res.status(500).json({ error: err });
+      res.json(scheduleResults);
+    });
+  });
+});
+
 // Thêm lịch học
 router.post('/schedules', (req, res) => {
   const { subject_id, class_id, teacher_id, day, start_time, end_time, room } = req.body;

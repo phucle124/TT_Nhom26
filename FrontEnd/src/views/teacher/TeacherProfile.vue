@@ -6,35 +6,32 @@
       <div class="avatar-section">
         <img class="avatar" src="https://via.placeholder.com/120" alt="avatar" />
         <h3>{{ teacher.full_name || "Chưa có tên" }}</h3>
-        <p>Mã user: <strong>{{ teacher.user_id || "N/A" }}</strong></p>
+        <p>Mã user: <strong>{{ teacher.user_id || "[Lỗi]" }}</strong></p>
       </div>
 
       <div class="info-section">
-        <h4>Thông tin giảng viên</h4>
-
-        <form v-if="!exists || !complete" @submit.prevent="updateInfo">
-          <ul>
-            <li><strong>Bộ môn:</strong><select v-model="teacher.department_id">
-              <option v-for="d in departments" :key="d.department_id" :value="d.department_id">{{ d.department_name }}</option>
-            </select>
-            </li>
-            <li><strong>Email:</strong><input v-model="teacher.email" type="email" /></li>
-            <li><strong>Số điện thoại:</strong><input v-model="teacher.phone" /></li>
-            <li><strong>Họ tên:</strong><input v-model="teacher.full_name" /></li>
-          </ul>
-          <button class="btn" type="submit">Lưu hồ sơ</button>
-        </form>
-
-        <div v-else>
-          <ul>
-            <li><strong>Tên: </strong> {{ teacher.full_name }}</li>
-            <li><strong>Bộ môn:</strong> {{ teacher.department_name }}</li>
-            <li><strong>Email:</strong> {{ teacher.email}}</li>
-            <li><strong>Số điện thoại:</strong> {{ teacher.phone }}</li>
-            <li><strong>Môn phụ trách:</strong> {{ teacher.subjects }}</li>
-          </ul>
-        </div>
+        <h4 class="text-center text-info mb-4 border-bottom pb-2">Thông tin giảng viên</h4>
+        <ul>
+          <li><strong>Tên: </strong> {{ teacher.full_name }}</li>
+          <li><strong>Khoa:</strong> {{ teacher.department_name }}</li>
+          <li><strong>Trình độ:</strong> {{ teacher.level }}</li>
+          <li><strong>Môn phụ trách:</strong> {{ teacher.subjects }}</li>
+        </ul>
       </div>
+
+      <!-- Form cập nhật -->
+      <form @submit.prevent="updateProfile">
+        <strong>Thông tin bổ sung:</strong>
+        <input v-model="teacher.teach_note" type="text" placeholder="Ghi chú" />
+
+        <strong>Số điện thoại:</strong>
+        <input v-model="teacher.phone" type="tel" placeholder="Số điện thoại" />
+
+        <strong>Nơi công tác:</strong>
+        <input v-model="teacher.workplace" type="text" placeholder="Nơi công tác" />
+
+        <button class="btn" type="submit">Cập nhật</button>
+      </form>
     </div>
   </div>
 </template>
@@ -44,55 +41,51 @@ export default {
   name: "TeacherProfile",
   data() {
     return {
-      teacher: {},
-      departments: [],
-      exists: false,
-      complete: false
+      teacher: {
+        user_id: "",
+        full_name: "",
+        department_id: "",
+        department_name: "",
+        subjects: "",       // nhận 1 chuỗi render từ CÁC CỘT có cùng  
+        teach_note: "",
+        phone: "",
+        level: "",
+        workplace: ""
+      },
+      departments: []
     };
   },
   async mounted() {
     const userId = localStorage.getItem("user_id");
-    if (userId) {
-      await this.checkProfile(userId);
-      await this.loadDepartments();
-    }
+    const res = await fetch(`http://localhost:8888/api/teachers/user/${userId}`);
+    const data = await res.json();
+
+    if (res.ok && data.success && data.teacher) {
+    this.teacher = data.teacher;
+    } else {
+    // fallback để tránh undefined
+    this.teacher = {
+      user_id: userId,
+      full_name: "",
+      department_id: "",
+      department_name: "",
+      subjects: "",
+      teach_note: "",
+      phone: "",
+      level: "",
+      workplace: ""
+    };
+  }
+    // Lấy danh sách khoa/bộ môn
+    await this.loadDepartments();
   },
-  methods: {
-    async checkProfile(userId) {
-      const res = await fetch(`http://localhost:8888/api/teachers/${userId}/check-profile`);
-      const data = await res.json();
-      this.exists = data.exists;
-      this.complete = data.complete;
-
-      // Lấy username, password từ localStorage
-      const username = localStorage.getItem("username");
-      const password = localStorage.getItem("password");
-
-      if (data.exists) {
-        const res2 = await fetch(`http://localhost:8888/api/teachers/user/${userId}`);
-        this.teacher = (await res2.json()).teacher;
-
-        // Luôn gán thêm username, password
-        this.teacher.username = username || this.teacher.username;
-        this.teacher.password = password || this.teacher.password;
-      } else {
-        this.teacher = {
-          teacher_id: "",
-          user_id: userId,
-          full_name: "",
-          department_id: "",
-          email: "",
-          phone: "",
-          username: username || "",
-          password: password || ""
-        };
-      }
-    },
+  methods: {    
     async loadDepartments() {
       const res = await fetch("http://localhost:8888/api/departments");
       this.departments = await res.json();
     },
-    async updateInfo() {
+
+    async updateProfile() {   // Cá nhân giảng viên tự cập nhật phần hồ sơ của mình
       const userId = localStorage.getItem("user_id");
       const res = await fetch(`http://localhost:8888/api/teachers/user/${userId}`, {
         method: "PUT",
@@ -100,11 +93,9 @@ export default {
         body: JSON.stringify(this.teacher)
       });
       const result = await res.json();
-      console.log("Kết quả cập nhật:", result);
 
       if (res.ok && result.success) {
         alert("Cập nhật hồ sơ thành công!");
-        this.complete = true;
       } else {
         alert(result.message || "Lỗi khi cập nhật hồ sơ!");
       }

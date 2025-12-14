@@ -31,7 +31,7 @@ export default {
   name: "AdminClasses",
   data() {
     return {
-      newClass: { class_name: "" }, // giữ dạng object để dễ mở rộng sau này
+      newClass: { class_name: "" }, 
       classes: []
     };
   },

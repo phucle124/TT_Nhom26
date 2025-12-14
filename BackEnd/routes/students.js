@@ -5,8 +5,7 @@ const db = require('../db');
 // Lấy danh sách tất cả sinh viên
 router.get('/students', (req, res) => {
   const query = `
-    SELECT s.student_id, s.full_name, s.email, s.phone,
-           c.class_name, d.department_name
+    SELECT s.student_id, c.class_name, d.department_name
     FROM students s
     JOIN classes c ON s.class_id = c.class_id
     JOIN departments d ON s.department_id = d.department_id
@@ -17,28 +16,23 @@ router.get('/students', (req, res) => {
   });
 });
 
-// Kiểm tra hồ sơ sinh viên theo user_id (TRƯỜNG HỢP ĐÃ CÓ ROW DỮ LIỆU TRONG BẢNG STUDENTS)
-// - exists = false: chưa có bản ghi nào trong bảng students
-// - exists = true: đã có hồ sơ
-router.get('/students/:user_id/check-profile', (req, res) => {
-  const { user_id } = req.params;
-  const query = `SELECT * FROM students WHERE user_id = ?`;   
-
-  db.query(query, [user_id], (err, results) => {
-    if (err) {
-      console.error('Lỗi truy vấn:', err);
-      return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
-    }
-
-    if (!results[0]) {
-      // chưa có hồ sơ
-      return res.json({ exists: false });
-    }
-
-    // đã có hồ sơ
-    res.json({ exists: true, student_id: results[0].student_id });
+// Lấy thông tin sinh viên theo user id  (LẤY THÔNG TIN CHO PHẦN MOUNTED)
+router.get('/students/user/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `
+    SELECT u.full_name, u.phone, s.current_address, s.year_start,c.class_name, d.department_name
+    FROM students s
+    JOIN users u ON s.user_id = u.user_id
+    JOIN classes c ON s.class_id = c.class_id
+    JOIN departments d ON u.department_id = d.department_id
+    WHERE s.user_id = ?
+  `;
+  db.query(query, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results[0]);
   });
 });
+
 
 
 // PĐT gán lớp/khoa cho sinh viên từ bảng users
@@ -88,10 +82,10 @@ router.post('/students/user/:user_id', (req, res) => {
   const { full_name, email, phone, class_id, department_id } = req.body;
 
   const query = `
-    INSERT INTO students (user_id, full_name, email, phone, class_id, department_id)
-    VALUES (?, ?, ?, ?, ?, ?)
+    INSERT INTO students (user_id, class_id, department_id)
+    VALUES (?, ?, ?)
   `;
-  db.query(query, [userId, full_name, email, phone, class_id, department_id], (err, results) => {
+  db.query(query, [userId, class_id, department_id], (err, results) => {
     if (err) {
       console.error('Lỗi thêm hồ sơ:', err);
       return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
@@ -105,8 +99,7 @@ router.post('/students/user/:user_id', (req, res) => {
 router.get('/students/user/:user_id', (req, res) => {
   const userId = req.params.user_id;
   const query = `
-    SELECT s.student_id, s.user_id, s.full_name, s.email, s.phone, s.username,
-           c.class_name, d.department_name
+    SELECT s.student_id, s.user_id, d.department_name
     FROM students s
     JOIN classes c ON s.class_id = c.class_id
     JOIN departments d ON s.department_id = d.department_id
@@ -127,14 +120,14 @@ router.get('/students/user/:user_id', (req, res) => {
 // Cập nhật thông tin sinh viên theo user_id
 router.put('/students/user/:user_id', (req, res) => {
   const userId = req.params.user_id;
-  const { full_name, email, phone, class_id, department_id } = req.body;
+  const { full_name, email, phone, class_id, current_address,department_id } = req.body;
 
   const query = `
     UPDATE students
-    SET full_name = ?, email = ?, phone = ?, class_id = ?, department_id = ?
+    SET full_name = ?, phone = ?, class_id = ?, current_address = ?, department_id = ?
     WHERE user_id = ?
   `;
-  db.query(query, [full_name, email, phone, class_id, department_id, userId], (err, result) => {
+  db.query(query, [full_name, phone, class_id, current_address, department_id, userId], (err, result) => {
     if (err) {
       console.error('Lỗi cập nhật:', err);
       return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
@@ -162,26 +155,21 @@ router.put('/students/assign/:user_id', (req, res) => {
   });
 });
 
-// Sinh viên cập nhật hồ sơ cá nhân (chỉ email và phone)
-router.put('/students/profile/:user_id', (req, res) => {
-  const userId = req.params.user_id;
-  const { email, phone } = req.body;
+// Cập nhật hồ sơ sinh viên (chỉ thông tin cá nhân trong bảng users)
+router.put('/students/profile/:id', (req, res) => {
+  const { id } = req.params;
+  const { phone, current_address } = req.body;
+  const queryUser = `UPDATE users SET phone = ? WHERE user_id = ?`;
+  const queryStudent = `UPDATE students SET current_address = ? WHERE user_id = ?`;
+  db.query(queryUser, [phone, id], (err) => {
+    if (err) return res.status(500).json({ error: err });
 
-  const query = `
-    UPDATE students
-    SET email = ?, phone = ?
-    WHERE user_id = ?
-  `;
-  db.query(query, [email, phone, userId], (err, result) => {
-    if (err) {
-      console.error('Lỗi cập nhật hồ sơ:', err);
-      return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ success: false, message: 'Không tìm thấy sinh viên' });
-    }
-    res.json({ success: true, message: 'Cập nhật hồ sơ thành công' });
+    db.query(queryStudent, [current_address,id], (err) => {
+      if (err) return res.status(500).json({ error: err });
+      res.json({ success: true });
+    });
   });
 });
+
 
 module.exports = router;

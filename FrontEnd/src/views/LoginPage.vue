@@ -16,19 +16,24 @@
   
   export default {
     name: 'LoginPage',
-    components: { FormLogin }
+    components: { FormLogin}
   }
   </script>
   
-  <style >
-  .login-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(to right, #004e92, #000428);
-    color: white;
-  }
+  <style>
+  
+
+.login-page {
+  min-height: 100vh;   /* phủ toàn bộ chiều cao màn hình */
+  width: 100%;
+  background: linear-gradient(to right, #1265ad, #000428);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
   </style>
   

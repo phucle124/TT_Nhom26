@@ -16,6 +16,22 @@ router.get('/classes', (req, res) => {
   });
 });
 
+//Lấy lớp theo khoa
+router.get('/classes/department/:departmentId', (req, res) => {
+  const { departmentId } = req.params;
+  const query = `
+    SELECT c.class_id, c.class_name
+    FROM classes c
+    JOIN subjects s ON c.subject_id = s.subject_id
+    JOIN departments d ON s.department_id = d.department_id
+    WHERE d.department_id = ?;
+  `;
+  db.query(query, [departmentId], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+});
+
 // Thêm lớp
 router.post('/classes', (req, res) => {
   const { class_name, year, subject_id } = req.body;

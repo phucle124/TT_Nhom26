@@ -19,30 +19,35 @@ router.get('/teacher-subjects', (req, res) => {
   });
 });
 
-// Gán môn cho giảng viên
+// Gán nhiều môn cho giảng viên
 router.post('/teacher-subjects', (req, res) => {
-  const { teacher_id, subject_id } = req.body;
-  if (!teacher_id || !subject_id) {
-    return res.status(400).json({ error: 'Thiếu teacher_id hoặc subject_id' });
+  const { teacher_id, subjectIds } = req.body;
+
+  if (!teacher_id || !Array.isArray(subjectIds) || subjectIds.length === 0) {
+    return res.status(400).json({ error: 'Thiếu teacher_id hoặc subjectIds' });
   }
+
+  // Tạo mảng values để insert nhiều dòng
+  const values = subjectIds.map(sid => [teacher_id, sid]);
+
   const query = `
     INSERT INTO teacher_subjects (teacher_id, subject_id)
-    VALUES (?, ?)
+    VALUES ?
     ON DUPLICATE KEY UPDATE teacher_id=teacher_id
   `;
-  db.query(query, [teacher_id, subject_id], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.status(201).json({ message: 'Đã gán môn cho giảng viên', id: results.insertId });
-  });
-});
 
-// Xóa gán môn
-router.delete('/teacher-subjects/:id', (req, res) => {
-  const { id } = req.params;
-  db.query("DELETE FROM teacher_subjects WHERE id = ?", [id], (err) => {
+  db.query(query, [values], (err, results) => {
     if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Đã bỏ gán môn cho giảng viên' });
+    res.json({ success: true, affectedRows: results.affectedRows });
   });
 });
+// Xóa gán môn
+// router.delete('/teacher-subjects/:id', (req, res) => {
+//   const { id } = req.params;
+//   db.query("DELETE FROM teacher_subjects WHERE id = ?", [id], (err) => {
+//     if (err) return res.status(500).json({ error: err });
+//     res.json({ message: 'Đã bỏ gán môn cho giảng viên' });
+//   });
+// });
 
 module.exports = router;

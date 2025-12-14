@@ -15,12 +15,10 @@
       <!-- Main Content -->
       <main class="content">
         <header class="header">
-          <h1>Student Portal</h1>
+          <h1>Sinh viên</h1>
         </header>
   
-        <section class="page-content">
-          <router-view></router-view>
-        </section>
+        <router-view></router-view>
       </main>
     </div>
   </template>
@@ -44,18 +42,8 @@ export default {
 </script>
 
   <style>
-  .student-layout {
-    display: flex;
-    height: 100vh;
-  }
   
-  .sidebar {
-    width: 240px;
-    background: #1c3d5a;
-    color: white;
-    padding: 20px;
-  }
-  
+ 
   .sidebar a {
     display: block;
     color: #e2e8f0;
@@ -63,25 +51,62 @@ export default {
     text-decoration: none;
   }
   
-  .sidebar a:hover {
-    color: white;
-    font-weight: bold;
-  }
-  
-  .content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .header {
-    background: #fff;
-    padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  .page-content {
-    padding: 20px;
-  }
+  .student-layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar cố định 240px */
+.sidebar {
+  width: 240px;
+  background: #1c3d5a;
+  color: white;
+  padding: 20px;
+}
+
+/* Nội dung chiếm phần còn lại */
+.content {
+  flex: 1;                  /* chiếm hết không gian còn lại */
+  display: flex;
+  flex-direction: column;   /* header trên, nội dung dưới */
+  padding: 20px;
+  overflow-y: auto;         /* cuộn nếu nội dung dài */
+}
+
+/* Header cố định trên cùng */
+.header {
+  background: #fff;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+/* Nội dung trang */
+.page-content {
+  flex: 1;
+  max-width: 1200px;        /* giới hạn chiều rộng để không quá dài */
+  margin: 0 auto;           /* căn giữa */
+  padding: 20px;
+}
+
+/* Profile container */
+.profile-container {
+  width: 100%;
+  max-width: 800px;         /* giới hạn chiều rộng hợp lý */
+  margin: 0 auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-container input {
+  width: 100%;              /* input full chiều ngang container */
+  padding: 8px;
+  margin: 8px 0 16px 0;
+  box-sizing: border-box;
+}
+
+
   </style>
   

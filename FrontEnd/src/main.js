@@ -1,11 +1,8 @@
-import Vue from 'vue'
+import { createApp } from 'vue'   
 import App from './App.vue'   //Truyen tat ca component vao
 import router from './router' //Truyen index.js vao
 
 
-Vue.config.productionTip = false
-
-new Vue({
-  router,          // dùng để điều hướng giữa các trang
-  render: h => h(App),
-}).$mount('#app')  // mount vào index.html
+const app = createApp(App)  //Tao app tu App.vue (Init Option API)
+app.use(router)             //Su dung router
+app.mount('#app')          //Gan app vao the co id la app trong index.html 
