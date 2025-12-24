@@ -8,9 +8,10 @@ const db = require('../db');
 // Lấy danh sách tất cả giảng viên  (DÙNG CHO ManageSchedules.vue)
 router.get('/teachers', (req, res) => {
   const query = `
-    SELECT t.teacher_id, t.phone, d.department_name
+    SELECT t.teacher_id, u.full_name, d.department_name
     FROM teachers t
-    LEFT JOIN departments d ON t.department_id = d.department_id
+    JOIN users u ON t.user_id = u.user_id
+    JOIN departments d ON u.department_id = d.department_id
   `;
   db.query(query, (err, results) => {
     if (err) return res.status(500).json({ error: err });
@@ -50,8 +51,7 @@ router.get('/teachers/user/:userId', (req, res) => {
   const { userId } = req.params;
 
   const query = `
-    SELECT 
-      u.user_id,
+    SELECT u.user_id,
       u.full_name,
       u.phone,
       d.department_name,
@@ -59,12 +59,13 @@ router.get('/teachers/user/:userId', (req, res) => {
       t.level,
       t.workplace,
       GROUP_CONCAT(s.subject_name SEPARATOR ', ') AS subjects
-    FROM teachers t
-    JOIN users u ON t.user_id = u.user_id
-    JOIN departments d ON u.department_id = d.department_id
-    LEFT JOIN subjects s ON d.department_id = s.department_id
-    WHERE t.user_id = ?
-    GROUP BY u.user_id, u.full_name, u.phone, d.department_name, t.teach_note, t.level, t.workplace;
+      FROM teachers t 
+      JOIN teacher_subjects ts ON t.teacher_id = ts.teacher_id
+      JOIN subjects s ON ts.subject_id = s.subject_id
+      JOIN departments d ON d.department_id = s.department_id
+      JOIN users u ON d.department_id = u.department_id
+      WHERE u.user_id = ?
+      GROUP BY u.user_id, u.full_name, u.phone, d.department_name, t.teach_note, t.level, t.workplace;
 
   `;
 
@@ -76,36 +77,6 @@ router.get('/teachers/user/:userId', (req, res) => {
     }
 
     res.json({ success: true, teacher: results[0] });
-  });
-});
-
-
-// Thêm mới giảng viên
-router.post('/teachers', (req, res) => {
-  const { user_id, full_name, email, department_id, level, workplace, birth, address, phone, idCard } = req.body;
-
-  const sql = `
-    INSERT INTO teachers (user_id, full_name, email, department_id, level, workplace)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `;
-
-  db.query(sql, [user_id, full_name, email, department_id, level, workplace], (err, results) => {
-    if (err) {
-      console.error('Lỗi thêm giảng viên:', err);
-      return res.status(500).json({ error: err });
-    }
-
-    // Nếu muốn đồng bộ thông tin cá nhân vào bảng users
-    const updateUser = `
-      UPDATE users 
-      SET id_card=?, birth=?, address=?, phone=? 
-      WHERE user_id=?
-    `;
-    db.query(updateUser, [idCard, birth, address, phone, user_id], (err2) => {
-      if (err2) console.error('Lỗi cập nhật user:', err2);
-    });
-
-    res.json({ success: true, id: results.insertId });
   });
 });
 

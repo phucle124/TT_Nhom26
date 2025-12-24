@@ -16,10 +16,10 @@
     name: "StudentMaterials",
     data() {
       return {
-        materials: [
-          { id: 1, title: "Slide chương 1", fileUrl: "/docs/slide1.pdf" },
-          { id: 2, title: "Bài tập chương 2", fileUrl: "/docs/bai_tap_2.pdf" },
-        ],
+        // materials: [
+        //   { id: 1, title: "Slide chương 1", fileUrl: "/docs/slide1.pdf" },
+        //   { id: 2, title: "Bài tập chương 2", fileUrl: "/docs/bai_tap_2.pdf" },
+        // ],
       };
     },
     methods: {

@@ -4,7 +4,6 @@
 
     <ul>
       <li><router-link to="/teacher/materials">Quản lý tài liệu</router-link></li>
-      <li><router-link to="/teacher/scores">Nhập điểm</router-link></li>
       <li><router-link to="/teacher/notifications">Tạo thông báo môn học</router-link></li>
       <li><router-link to="/teacher/profile">Hồ sơ cá nhân</router-link></li>
     </ul>

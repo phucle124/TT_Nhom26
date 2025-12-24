@@ -19,12 +19,10 @@ import { createRouter, createWebHistory } from 'vue-router'
     children: [
       { path: 'dashboard', component: () => import('@/views/admin/AdminDashboard.vue') },
       { path: 'manage-accounts', component: () => import('@/views/admin/ManageAccounts.vue') },
-      { path: 'manage-classes', component: () => import('@/views/admin/ManageClasses.vue') },
-      { path: 'manage-subjects', component: () => import('@/views/admin/ManageSubjects.vue') },
-      { path: 'manage-scores', component: () => import('@/views/admin/ManageScores.vue') },
+      { path: 'manage-subjects-classes', component: () => import('@/views/admin/Manage_SubjectsClasses.vue') },
       { path: 'manage-schedules', component: () => import('@/views/admin/ManageSchedules.vue') },
       { path: 'manage-notification', component: () => import('@/views/admin/ManageNoti.vue') },
-      { path: 'teacher-subjects', component: () => import('@/views/admin/Manage_TeacherSubjects.vue') },
+  
 
     ]
   },
@@ -46,8 +44,6 @@ import { createRouter, createWebHistory } from 'vue-router'
     component: () => import('@/views/teacher/TeacherLayout.vue'),
     children: [
       { path: 'dashboard', name: 'TeacherDashboard', component: () => import('@/views/teacher/TeacherDashboard.vue') },
-      { path: 'materials', name: 'TeacherMaterials', component: () => import('@/views/teacher/TeacherMaterials.vue') },
-      { path: 'scores', name: 'TeacherScores', component: () => import('@/views/teacher/TeacherScores.vue') },
       { path: 'notifications', name: 'TeacherNotifications', component: () => import('@/views/teacher/TeacherNoti.vue') },
       { path: 'profile', name: 'TeacherProfile', component: () => import('@/views/teacher/TeacherProfile.vue') },
       { path: 'schedule', name: 'TeacherSchedule', component: () => import('@/views/teacher/TeacherSchedule.vue') },

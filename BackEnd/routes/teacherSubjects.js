@@ -5,15 +5,18 @@ const db = require('../db');
 
 // Lấy danh sách gán môn cho giảng viên
 // GET /teacher-subjects
-router.get('/teacher-subjects', (req, res) => {
+// Lấy danh sách môn theo giảng viên
+router.get('/teacher-subjects/:teacher_id', (req, res) => {
+  const teacherId = req.params.teacher_id;
   const query = `
-    SELECT ts.id, t.full_name, d.department_name, s.subject_name
-    FROM teacher_subjects ts
+    SELECT s.subject_id, s.subject_name, u.full_name
+    FROM subjects s 
+    JOIN teacher_subjects ts ON s.subject_id = ts.subject_id
     JOIN teachers t ON ts.teacher_id = t.teacher_id
-    JOIN departments d ON t.department_id = d.department_id
-    JOIN subjects s ON ts.subject_id = s.subject_id
+    JOIN users u ON t.user_id = u.user_id
+    WHERE t.teacher_id = ?
   `;
-  db.query(query, (err, results) => {
+  db.query(query, [teacherId], (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
   });

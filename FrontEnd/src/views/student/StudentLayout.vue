@@ -9,6 +9,8 @@
           <router-link to="/student/materials">Tài liệu</router-link>
           <router-link to="/student/notifications">Thông báo</router-link>
           <router-link to="/student/profile">Trang cá nhân</router-link>
+          <button class="btn btn-danger" @click="logout()">Đăng xuất</button>
+        
         </nav>
       </aside>
   
@@ -32,6 +34,29 @@ export default {
       student: null
     };
   },
+
+  methods: {
+      logout(){
+
+        //Chuyển tất cả các giá trị localStorage đã hứng ở FormLogin.vue về null
+        // user_id=null
+        // role=null
+        // username=null
+        // password=null
+
+        // window.localStorage.removeItem('user_id')
+        // window.localStorage.removeItem('role')
+        // window.localStorage.removeItem('username')
+        // window.localStorage.removeItem('password')
+
+        window.localStorage.clear()
+
+        alert("Đã đăng xuất thành công!");
+
+        window.location.href = '/login'
+      }
+    },
+
   async mounted() {
     const userId = localStorage.getItem("user_id");
     // Gọi API students kèm token
@@ -39,6 +64,9 @@ export default {
     this.student = data;
   }
 };
+
+
+
 </script>
 
   <style>
@@ -51,9 +79,15 @@ export default {
     text-decoration: none;
   }
   
+.sidebar a:hover {
+  color: white;
+  font-weight: bold;
+}
+
+
   .student-layout {
   display: flex;
-  height: 100vh;
+  height: 100%;
 }
 
 /* Sidebar cố định 240px */

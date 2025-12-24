@@ -6,11 +6,9 @@
         <router-link to="/admin/dashboard">Dashboard</router-link>
         <router-link to="/admin/manage-accounts">Quản lí tài khoản</router-link>
         <router-link to="/admin/manage-schedules">Quản lí lịch học</router-link>
-        <router-link to="/admin/manage-classes">Quản lí lớp học</router-link>
-        <router-link to="/admin/manage-subjects">Quản lí môn học</router-link>
-        <router-link to="/admin/manage-scores">Quản lí điểm</router-link>
+        <router-link to="/admin/manage-subjects-classes">Quản lí môn học & lớp học</router-link>
         <router-link to="/admin/manage-notification">Quản lí thông báo</router-link>
-
+        <button class="btn btn-danger" @click="logout()">Đăng xuất</button>
       </nav>
     </aside>
 
@@ -27,13 +25,41 @@
   </div>
 </template>
 
+<script>
+
+  export default {
+
+    methods: {
+      logout(){
+
+        //Chuyển tất cả các giá trị localStorage đã hứng ở FormLogin.vue về null
+        // user_id=null
+        // role=null
+        // username=null
+        // password=null
+
+        // window.localStorage.removeItem('user_id')
+        // window.localStorage.removeItem('role')
+        // window.localStorage.removeItem('username')
+        // window.localStorage.removeItem('password')
+
+        window.localStorage.clear()
+
+        // alert("Đã đăng xuất thành công!");
+
+        window.location.href = '/login'
+      }
+    }
+  }
+</script>
+
 
 
 <style>
 .admin-layout {
   display: flex;
   flex-direction: row; /* chia theo chiều ngang */
-  height: 100vh;
+  height: 100%;
   background: #f5f5f5;
 }
 
@@ -90,8 +116,8 @@ option:checked {
   background: #c8c8c8;
 }
 input, button {
-  margin: .4rem 0;
-  padding: 0.4rem;
+  margin: 10px;
+  
 }
 
 

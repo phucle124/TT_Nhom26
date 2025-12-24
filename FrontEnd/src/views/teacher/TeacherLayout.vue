@@ -5,11 +5,11 @@
         <h2>Teacher</h2>
         <nav>
           <router-link to="/teacher/dashboard">Dashboard</router-link>
-          <router-link to="/teacher/materials">Quản lý tài liệu</router-link>
-          <!-- <router-link to="/teacher/scores">Nhập điểm</router-link> -->     
+          <router-link to="/teacher/materials">Quản lý tài liệu</router-link> 
           <router-link to="/teacher/notifications">Thông báo môn học</router-link>
           <router-link to="/teacher/profile">Trang cá nhân</router-link>
           <router-link to="/teacher/schedule">Lịch dạy</router-link>
+          <button class="btn btn-danger" @click="logout()">Đăng xuất</button>
         </nav>
       </aside>
   
@@ -26,6 +26,29 @@ export default {
       teacher: null
     };
   },
+
+  methods: {
+      logout(){
+
+        //Chuyển tất cả các giá trị localStorage đã hứng ở FormLogin.vue về null
+        // user_id=null
+        // role=null
+        // username=null
+        // password=null
+
+        // window.localStorage.removeItem('user_id')
+        // window.localStorage.removeItem('role')
+        // window.localStorage.removeItem('username')
+        // window.localStorage.removeItem('password')
+
+        window.localStorage.clear()
+
+        alert("Đã đăng xuất thành công!");
+
+        window.location.href = '/login'
+      }
+    },
+
   async mounted() {
     const userId = localStorage.getItem("user_id");
     // Gọi API teachers kèm token
@@ -33,12 +56,13 @@ export default {
     this.teacher = data;
   }
 };
+
 </script>
 
   <style>
   .teacher-layout {
     display: flex;
-    height: 100vh;
+    height: 100%;
   }
   
   .sidebar {

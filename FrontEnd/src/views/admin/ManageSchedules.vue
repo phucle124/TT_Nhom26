@@ -7,21 +7,21 @@
     <input type="time" v-model="start_time" />
     <input type="time" v-model="end_time" />
 
-    <select v-model="class_id">
-      <option value="" selected disabled>Chọn lớp học</option>
-      <option v-for="c in classes" :key="c.class_id" :value="c.class_id">
-        {{ c.class_name }}
-      </option>
-    </select>
-
-    <select v-model="teacher_id" @change="loadSubjectsByTeacher">
+    <select v-model="teacher_id" @change="filter">
       <option value="" selected disabled>Chọn giảng viên</option>
       <option v-for="t in teachers" :key="t.teacher_id" :value="t.teacher_id">
         {{ t.full_name }}
       </option>
     </select>
 
-    <select v-model="subject_id">
+    <select v-model="class_id" >
+      <option value="" selected disabled>Chọn lớp học</option>
+      <option v-for="c in classes" :key="c.class_id" :value="c.class_id">
+        {{ c.class_name }}
+      </option>
+    </select>
+
+    <select v-model="subject_id" >
       <option value="" selected disabled>Chọn môn học</option>
       <option v-for="s in subjects" :key="s.subject_id" :value="s.subject_id">
         {{ s.subject_name }}
@@ -76,7 +76,7 @@ export default {
   },
   mounted() {
     this.loadSchedules();
-    this.loadClasses();
+    // this.loadClasses();
     this.loadTeachers();
   },
   methods: {
@@ -84,8 +84,17 @@ export default {
       const res = await fetch("http://localhost:8888/api/schedules");
       this.schedules = await res.json();
     },
-    async loadClasses() {
-      const res = await fetch("http://localhost:8888/api/classes");
+    async filter(){
+      this.loadClassesByTeacher();
+      this.loadSubjectsByTeacher();
+    },
+    // async loadClasses() {
+    //   const res = await fetch("http://localhost:8888/api/classes");
+    //   this.classes = await res.json();
+    // },
+    async loadClassesByTeacher(){
+      if (!this.teacher_id) return;
+      const res = await fetch(`http://localhost:8888/api/teacher-classes/${this.teacher_id}`);
       this.classes = await res.json();
     },
     async loadTeachers() {
@@ -116,7 +125,8 @@ export default {
         })
       });
       if (res.ok) {
-        alert("Đã thêm lịch học!");
+        
+        //Thêm lịch học thành công thì reset toàn bộ form
         
         this.subject_id = "";
         this.room = "";

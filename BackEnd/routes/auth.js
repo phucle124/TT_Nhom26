@@ -41,18 +41,18 @@ router.post('/login', (req, res) => {
             return res.status(500).json({ success: false, message: 'Lỗi máy chủ' });
         }
 
-        if (results.length === 0) { 
-            res.status(401).json({ success: false, message: 'Sai thông tin đăng nhập' });
+        if (results.length === 0) {
+            return res.status(401).json({ success: false, message: 'Sai thông tin đăng nhập' });
         }
-      
-        const user = results[0];            //Dùng biến user để lấy thông tin từ table users 
-        const token = jwt.sign(             //jwt.sign(payload, secretOrPrivateKey, [options, callback])
-                    { user_id: user.user_id, username: user.username, role: user.role },
-                    secretKey,
-                    {expiresIn: '1h'}           //Token có thời hạn 1 giờ
+
+        const user = results[0]; // lúc này chắc chắn có dữ liệu
+        const token = jwt.sign(
+            { user_id: user.user_id, username: user.username, role: user.role },
+            secretKey,
+            { expiresIn: '1h' }
         );
 
-       res.json({
+        res.json({
             success: true,
             message: 'Đăng nhập thành công',
             role: user.role,
@@ -60,12 +60,10 @@ router.post('/login', (req, res) => {
             user_id: user.user_id,
             token
         });
-
-
     });
 });
 
-//Hàm xác minh token bằng middleware
+//Hàm xác minh token bằng middleware  (KHÔNG DÙNG)
 function XacMinhToken(req, res, next) {
   // Token chuẩn: Authorization: Bearer <token>
   const authHeader = req.headers['authorization'];
@@ -77,7 +75,7 @@ function XacMinhToken(req, res, next) {
 
   jwt.verify(token, secretKey, (err, user) => {
     if (err) {
-      return res.status(403).json({ success: false, message: 'Token không hợp lệ hoặc đã hết hạn' });
+      return res.status(403).json({ success: false, message: 'Token đã hết hạn' });
     }
     // Gắn thông tin user vào request để các route khác dùng
     req.user = user;

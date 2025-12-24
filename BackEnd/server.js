@@ -6,15 +6,15 @@ const app = express();
 require('dotenv').config();
 //Lấy ra các giá trị thuộc tính từ file .env
 const port = process.env.PORT || 8888; // fallback nếu .env không có PORT
-
+const fileUpload = require('express-fileupload');
 const db = require('./db');
 
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload()); //Bật Middleware để nhận file
 
 const usersRoutes = require('./routes/users');
 const schedulesRoutes = require('./routes/schedules');
-const scoresRoutes = require('./routes/scores');
 const notificationsRoutes = require('./routes/notifications');
 const subjectsRoutes = require('./routes/subjects');
 const departmentsRoutes = require('./routes/departments');
@@ -22,6 +22,8 @@ const classesRoutes = require('./routes/classes');
 const studentRoutes = require('./routes/students');
 const teacherRoutes = require('./routes/teachers');
 const teacherSubjectRoutes = require('./routes/teacherSubjects');
+const materialsRoutes = require('./routes/materials');
+
 const { router: authRoutes, XacMinhToken } = require('./routes/auth');
 
 
@@ -29,18 +31,18 @@ app.use('/api', teacherSubjectRoutes);
 app.use('/api', authRoutes);
 app.use('/api', usersRoutes);
 app.use('/api', schedulesRoutes);
-app.use('/api', scoresRoutes);
 app.use('/api', notificationsRoutes);
 app.use('/api', subjectsRoutes);
 app.use('/api', departmentsRoutes);
 app.use('/api', classesRoutes);
+app.use('/api', materialsRoutes);
 
 app.use('/api', teacherRoutes);
 app.use('/api', studentRoutes);
 
 //Bảo vệ 2 route student và teacher bằng middleware xác minh token
-app.use('/api/students', XacMinhToken, studentRoutes);
-app.use('/api/teachers', XacMinhToken, teacherRoutes);
+// app.use('/api/students', XacMinhToken, studentRoutes);
+// app.use('/api/teachers', XacMinhToken, teacherRoutes);
 
 app.get('/', (req, res) => {
     res.send(`Server is running on port ${port}`);
@@ -74,7 +76,7 @@ function resetAutoIncrementIfEmpty(tableName) {
 }
 
 // Chạy khi server start
-["teachers","students","subjects","classes","schedules","scores","teacher_subjects","notifications","materials"]
+["teachers","students","subjects","classes","schedules","teacher_subjects","notifications","materials"]
   .forEach(table => resetAutoIncrementIfEmpty(table));
 
 db.getConnection((err, connection) => {

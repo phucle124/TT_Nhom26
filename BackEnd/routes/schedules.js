@@ -5,12 +5,20 @@ const db = require('../db');
 // Lấy tất cả lịch học
 router.get('/schedules', (req, res) => {
   const query = `
-    SELECT sch.schedule_id, sub.subject_name, c.class_name, t.full_name AS teacher_name,
-           sch.day, sch.start_time, sch.end_time, sch.room
-    FROM schedules sch
-    JOIN subjects sub ON sch.subject_id = sub.subject_id
-    JOIN classes c ON sch.class_id = c.class_id
-    JOIN teachers t ON sch.teacher_id = t.teacher_id
+      SELECT 
+      sch.schedule_id, 
+      sub.subject_name, 
+      c.class_name, 
+      u.full_name AS teacher_name,
+      sch.day, 
+      sch.start_time, 
+      sch.end_time, 
+      sch.room
+      FROM schedules sch
+      JOIN subjects sub ON sch.subject_id = sub.subject_id
+      JOIN classes c ON sch.class_id = c.class_id
+      JOIN teachers t ON sch.teacher_id = t.teacher_id
+      JOIN users u ON t.user_id = u.user_id;
   `;
   db.query(query, (err, results) => {
     if (err) return res.status(500).json({ error: err });
@@ -81,15 +89,16 @@ router.get('/schedules/student/byUser/:user_id', (req, res) => {
     // B2: Lấy lịch học từ bảng schedules theo class_id
     const querySchedules = `
       SELECT sch.schedule_id,
-             sub.subject_name,
-             sch.day,
-             sch.start_time,
-             sch.end_time,
-             sch.room,
-             t.full_name AS teacher_name
+       sub.subject_name,
+       sch.day,
+       sch.start_time,
+       sch.end_time,
+       sch.room,
+       u.full_name AS teacher_name
       FROM schedules sch
       JOIN subjects sub ON sch.subject_id = sub.subject_id
       JOIN teachers t ON sch.teacher_id = t.teacher_id
+      JOIN users u ON t.user_id = u.user_id
       WHERE sch.class_id = ?
     `;
     db.query(querySchedules, [classId], (err, scheduleResults) => {

@@ -67,10 +67,14 @@ router.post('/users', (req, res) => {
     // Nếu là sinh viên thì thêm vào bảng students
     if (role === 'Sinh_vien') {
       db.query(
-        'INSERT INTO students (user_id, year_start, class_id,level,workplace) VALUES (?,?,?,?,?)',
-        [newUserId, yearStart, classId, level, workplace],
+        'INSERT INTO students (user_id, year_start, current_address, class_id) VALUES (?,?,?,?)',
+        [newUserId, yearStart, address, classId],   // classId phải có giá trị
         (err2) => {
-          if (err2) console.error('Lỗi thêm sinh viên:', err2);
+          if (err2) {
+            console.error('Lỗi thêm sinh viên:', err2);
+            return res.status(500).json({ error: err2 });
+          }
+          return res.json({ success: true, id: newUserId });
         }
       );
     }
@@ -94,19 +98,83 @@ router.post('/users', (req, res) => {
   });
 });
 
+
 // Sửa user
 router.put('/users/:id', (req, res) => {
-  const { username, role, phone } = req.body;
-  db.query('UPDATE users SET username=?, role=?, phone=? WHERE user_id=?',
-    [username, role, phone, req.params.id],
-    (err) => {
-      if (err) return res.status(500).json({ error: err });
-      res.json({ success: true });
-    });
+  const {
+    full_name,
+    department_id,
+    id_card,
+    birth,
+    address,
+    phone,
+    role,
+    year_start,
+    current_address,
+    class_id,
+    level,
+    workplace,
+    teach_note,
+    subjectIds // mảng môn học từ frontend
+  } = req.body;
+
+  const userId = req.params.id;
+
+  // Update bảng users
+  const sqlUser = `
+    UPDATE users 
+    SET full_name=?, department_id=?, id_card=?, birth=?, address=?, phone=?, role=? 
+    WHERE user_id=?`;
+
+  db.query(sqlUser, [full_name, department_id, id_card, birth, address, phone, role, userId], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+
+    if (role === 'Sinh_vien') {
+      const sqlStudent = `
+        UPDATE students 
+        SET year_start=?, current_address=?, class_id=? 
+        WHERE user_id=?`;
+      db.query(sqlStudent, [year_start, current_address, class_id, userId], (err2) => {
+        if (err2) return res.status(500).json({ error: err2.message });
+        return res.json({ success: true, message: 'Cập nhật sinh viên thành công' });
+      });
+    }
+
+    else if (role === 'Giang_vien') {
+      const sqlTeacher = `
+        UPDATE teachers 
+        SET level=?, workplace=?, teach_note=? 
+        WHERE user_id=?`;
+      db.query(sqlTeacher, [level, workplace, teach_note, userId], (err3) => {
+        if (err3) return res.status(500).json({ error: err3.message });
+
+        // --- cập nhật teacher_subjects ---
+        const deleteSql = `DELETE FROM teacher_subjects WHERE teacher_id=?`;
+        db.query(deleteSql, [userId], (errDel) => {
+          if (errDel) return res.status(500).json({ error: errDel.message });
+
+          if (Array.isArray(subjectIds) && subjectIds.length > 0) {
+            const insertSql = `INSERT INTO teacher_subjects (teacher_id, subject_id) VALUES ?`;
+            const values = subjectIds.map(sid => [userId, sid]);
+            db.query(insertSql, [values], (errIns) => {
+              if (errIns) return res.status(500).json({ error: errIns.message });
+              return res.json({ success: true, message: 'Cập nhật giảng viên + môn phụ trách thành công' });
+            });
+          } else {
+            return res.json({ success: true, message: 'Cập nhật giảng viên thành công (không có môn phụ trách)' });
+          }
+        });
+      });
+    }
+
+    else {
+      return res.json({ success: true, message: 'Cập nhật user thành công' });
+    }
+  });
 });
 
 
-//Xóa user 
+//Xóa user (SOURCE CŨ)
 // router.delete('/users/:id', (req, res) => {
 //     db.query('DELETE FROM users WHERE user_id = ?', [req.params.id], (err) => {
 //         if (err) return res.status(500).json({ error: err });

@@ -4,12 +4,10 @@
   
       <ul>
         <li><router-link to="/admin/manage-accounts">Quản lý tài khoản</router-link></li>
-        <li><router-link to="/admin/manage-classes">Quản lý lớp học</router-link></li>
+        <li><router-link to="/admin/manage-subjects-classes">Quản lý lớp học & lớp học</router-link></li>
         <li><router-link to="/admin/manage-courses">Quản lý môn học</router-link></li>
         <li><router-link to="/admin/manage-schedule">Quản lý lịch học</router-link></li>
-        <li><router-link to="/admin/manage-grades">Quản lý điểm số</router-link></li>
-        <li><router-link to="/admin/manage-notifications">Thông báo toàn trường</router-link></li>
-        <li><router-link to="/admin/teacher-subjects">Quản lý môn giảng viên dạy</router-link></li>
+        <li><router-link to="/admin/manage-notification">Thông báo toàn trường</router-link></li>
       </ul>
     </div>
   </template>
@@ -24,5 +22,10 @@
   ul li {
     margin: 10px 0;
   }
+
+  *{
+    height: auto;
+  }
+
   </style>
   
