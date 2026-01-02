@@ -19,6 +19,27 @@ router.get('/teachers', (req, res) => {
   });
 });
 
+router.get('/teachers/byDepartment/:department_id', (req, res) => {
+  const departmentId = req.params.department_id;
+  if (!departmentId) return res.status(400).json({ error: 'Thiếu department_id' });
+
+  const q = `
+    SELECT t.teacher_id, t.user_id, u.full_name, t.level, t.workplace
+    FROM teachers t
+    LEFT JOIN users u ON t.user_id = u.user_id
+    WHERE u.department_id = ?
+    ORDER BY u.full_name
+  `;
+  db.query(q, [departmentId], (err, rows) => {
+    if (err) {
+      console.error('GET teachers/byDepartment error:', err);
+      return res.status(500).json({ error: 'Lỗi server' });
+    }
+    // trả mảng rỗng nếu không có
+    return res.json(Array.isArray(rows) ? rows : []);
+  });
+});
+
 
 //Lấy ra cột level (dùng cho ManageAccounts.vue)
 router.get('/teacher/level', (req, res) => {
@@ -65,7 +86,6 @@ router.get('/teachers/user/:userId', (req, res) => {
       JOIN departments d ON d.department_id = s.department_id
       JOIN users u ON d.department_id = u.department_id
       WHERE u.user_id = ?
-      GROUP BY u.user_id, u.full_name, u.phone, d.department_name, t.teach_note, t.level, t.workplace;
 
   `;
 

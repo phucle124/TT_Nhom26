@@ -9,6 +9,7 @@
           <router-link to="/student/materials">Tài liệu</router-link>
           <router-link to="/student/notifications">Thông báo</router-link>
           <router-link to="/student/profile">Trang cá nhân</router-link>
+          <router-link to="/student/registrations">Đăng kí môn học</router-link>
           <button class="btn btn-danger" @click="logout()">Đăng xuất</button>
         
         </nav>
@@ -50,8 +51,6 @@ export default {
         // window.localStorage.removeItem('password')
 
         window.localStorage.clear()
-
-        alert("Đã đăng xuất thành công!");
 
         window.location.href = '/login'
       }

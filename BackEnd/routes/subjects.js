@@ -32,21 +32,41 @@ router.get('/subjects/department/:departmentId', (req, res) => {
 
 // Thêm môn học
 router.post('/subjects', (req, res) => {
-  const { subject_name, credit, department_id } = req.body;
-  const query = "INSERT INTO subjects (subject_name, credit, department_id) VALUES (?, ?, ?)";
-  db.query(query, [subject_name, credit, department_id], (err, results) => {
+  const { subject_name, credit, department_id, year, semester } = req.body;
+
+  const querySubject = "INSERT INTO subjects (subject_name, credit, department_id) VALUES (?, ?, ?)";
+  db.query(querySubject, [subject_name, credit, department_id], (err, results) => {
     if (err) return res.status(500).json({ error: err });
-    res.status(201).json({ message: 'Subject added', id: results.insertId });
+
+    const subjectId = results.insertId;
+
+    const queryCurriculum = "INSERT INTO curriculum (subject_id, year, semester, department_id) VALUES (?, ?, ?, ?)";
+    db.query(queryCurriculum, [subjectId, year, semester, department_id], (err2) => {
+      if (err2) return res.status(500).json({ error: err2 });
+
+      res.status(201).json({ 
+        message: 'Thêm môn học thành công', 
+        subject_id: subjectId 
+      });
+    });
   });
 });
 
 // Xóa môn học
 router.delete('/subjects/:id', (req, res) => {
-  const subjectId = req.params.id;
-  const query = 'DELETE FROM subjects WHERE subject_id = ?';
-  db.query(query, [subjectId], (err, results) => {
+  const id = req.params.id;
+
+
+  const queryCurriculum = 'DELETE FROM curriculum WHERE subject_id = ?';
+  db.query(queryCurriculum, [id], (err) => {
     if (err) return res.status(500).json({ error: err });
-    res.json({ message: 'Subject deleted successfully' });
+  });
+
+
+  const query = 'DELETE FROM subjects WHERE subject_id = ?';
+  db.query(query, [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.status(201).json({ message: 'Đã xoá môn học'});
   });
 });
 

@@ -3,9 +3,9 @@
       <h2>Tài liệu môn học</h2>
   
       <ul>
-        <li v-for="file in materials" :key="file.id">
-          {{ file.title }}
-          <button @click="download(file.fileUrl)">Tải xuống</button>
+        <li v-for="materials in materials" :key="materials.id">
+          {{ materials.title }}
+          <button @click="download(materials.fileUrl)">Tải xuống</button>
         </li>
       </ul>
     </div>

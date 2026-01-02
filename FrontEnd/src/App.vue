@@ -2,19 +2,18 @@
   <div id="app">
     <Navbar v-if="showNavbar"/>
     <router-view />
-    <ToggleSwitch class="switch-global" />
-    
+  
   </div>
   
 </template>
 
 <script >
 import Navbar from './components/Navbar.vue'
-import ToggleSwitch from './components/Light_Dark_Switch.vue'
+
 
 export default {
   name: 'App',
-  components: { Navbar, ToggleSwitch },
+  components: { Navbar },
   computed: {
     showNavbar() {
       // Danh sách route cần hiển thị Navbar chỉ ở các trang: home, introduce, login
@@ -47,13 +46,6 @@ body {
   
 }
 
-.switch-global {
-  position: fixed;
-  top: 20rem;
-  right: 5rem;
-  rotate: 90deg;
-  z-index: 3; 
-}
 
 .notify-card {
   border: 1px solid #ccc;

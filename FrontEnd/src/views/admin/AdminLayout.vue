@@ -8,6 +8,8 @@
         <router-link to="/admin/manage-schedules">Quản lí lịch học</router-link>
         <router-link to="/admin/manage-subjects-classes">Quản lí môn học & lớp học</router-link>
         <router-link to="/admin/manage-notification">Quản lí thông báo</router-link>
+        <router-link to="/admin/manage-course-enrollments">Mở đăng ký môn học</router-link>
+        
         <button class="btn btn-danger" @click="logout()">Đăng xuất</button>
       </nav>
     </aside>
@@ -16,7 +18,7 @@
     <!-- Content -->
     <main class="content">
       <header class="header">
-        <h1>Quản lí hệ thống</h1>
+        <h1>QUẢN LÍ HỆ THÔNG</h1>
       </header>
       <section class="page-content">
         <router-view></router-view>

@@ -7,6 +7,8 @@
         <li><router-link to="/student/schedule">Xem lịch học</router-link></li>
         <li><router-link to="/student/materials">Xem tài liệu</router-link></li>
         <li><router-link to="/student/notifications">Thông báo</router-link></li>
+        <li><router-link to="/student/profile">Trang cá nhân</router-link></li>
+        <li><router-link to="/student/registrations">Đăng kí môn học</router-link></li>
       </ul>
     </div>
   </template>

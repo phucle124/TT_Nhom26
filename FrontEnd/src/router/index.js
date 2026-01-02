@@ -22,6 +22,7 @@ import { createRouter, createWebHistory } from 'vue-router'
       { path: 'manage-subjects-classes', component: () => import('@/views/admin/Manage_SubjectsClasses.vue') },
       { path: 'manage-schedules', component: () => import('@/views/admin/ManageSchedules.vue') },
       { path: 'manage-notification', component: () => import('@/views/admin/ManageNoti.vue') },
+      { path: 'manage-course-enrollments', component: () => import('@/views/admin/ManageCourseEnrollments.vue')},
   
 
     ]
@@ -36,6 +37,7 @@ import { createRouter, createWebHistory } from 'vue-router'
       { path: 'materials', component: () => import('@/views/student/StudentMaterials.vue') },
       { path: 'notifications', component: () => import('@/views/student/StudentNotifications.vue') },
       { path: 'profile', component: () => import('@/views/student/StudentProfile.vue') },
+      { path: 'registrations', component: () => import('@/views/student/StudentRegistrations.vue') }
     ]
   },
 

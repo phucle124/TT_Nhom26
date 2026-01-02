@@ -3,12 +3,12 @@ const router = express.Router();
 const db = require('../db');
 
 // Lấy tất cả thông báo (BỎ , KHÔNG DÙNG)
-router.get('/notifications', (req, res) => {
-  db.query('SELECT * FROM notifications ORDER BY create_day DESC', (err, results) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json(results);
-  });
-});
+// router.get('/notifications', (req, res) => {
+//   db.query('SELECT * FROM notifications ORDER BY create_day DESC', (err, results) => {
+//     if (err) return res.status(500).json({ error: err });
+//     res.json(results);
+//   });
+// });
 
 // Lấy thông báo cho sinh viên theo user_id
 router.get('/notifications/student/:user_id', (req, res) => {
@@ -68,7 +68,7 @@ router.post('/notifications', (req, res) => {
 
     const role = results[0].role;
 
-    // Nếu là PĐT → gửi toàn trường
+    // Nếu là PĐT 
     if (role === 'PĐT') {
       const getUsers = `SELECT user_id FROM users WHERE role != 'PĐT'`;
       db.query(getUsers, (err2, users) => {
@@ -89,7 +89,7 @@ router.post('/notifications', (req, res) => {
       });
     }
 
-    // Nếu là Giảng viên → gửi cho tất cả Sinh viên
+    // Nếu là Giảng viên 
     else if (role === 'Giang_vien') {
       if (type !== 'Cá nhân' && type !== 'Môn học') {
         return res.status(400).json({ success: false, message: "Giảng viên chỉ được gửi thông báo Cá nhân hoặc Môn học" });

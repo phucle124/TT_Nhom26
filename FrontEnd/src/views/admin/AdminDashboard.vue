@@ -8,6 +8,7 @@
         <li><router-link to="/admin/manage-courses">Quản lý môn học</router-link></li>
         <li><router-link to="/admin/manage-schedule">Quản lý lịch học</router-link></li>
         <li><router-link to="/admin/manage-notification">Thông báo toàn trường</router-link></li>
+        <li><router-link to="/admin/manage-course-enrollments">Đăng ký môn học</router-link></li>
       </ul>
     </div>
   </template>

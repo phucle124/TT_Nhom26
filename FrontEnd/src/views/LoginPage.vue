@@ -4,7 +4,7 @@
       <ToggleSwitch />
     </div>
 
-      <h2 class="display-5 fw-bolder mb-5 text-light" >Chào mừng đến với hệ thống quản lí thông tin sinh viên</h2>
+      <h2 class="display-5 fw-bolder mb-5 text-light" >Chào mừng đến với hệ thống quản lí Lịch học</h2>
       <br>
       
       <FormLogin />  <!-- Gọi form đăng nhập thực sự -->

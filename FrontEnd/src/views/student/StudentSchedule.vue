@@ -41,8 +41,8 @@ export default {
   },
   methods: {
     async loadSchedules() {
-      const studentId = localStorage.getItem("user_id");
-      const res = await fetch(`http://localhost:8888/api/schedules/student/byUser/${studentId}`);
+      const userId = localStorage.getItem("user_id");
+      const res = await fetch(`http://localhost:8888/api/schedules/student/byUser/${userId}`);
       this.schedules = await res.json();
     },
 

@@ -23,10 +23,11 @@ const studentRoutes = require('./routes/students');
 const teacherRoutes = require('./routes/teachers');
 const teacherSubjectRoutes = require('./routes/teacherSubjects');
 const materialsRoutes = require('./routes/materials');
+const enrollmentRoutes = require('./routes/enrollment');
 
 const { router: authRoutes, XacMinhToken } = require('./routes/auth');
 
-
+app.use('/api', enrollmentRoutes);
 app.use('/api', teacherSubjectRoutes);
 app.use('/api', authRoutes);
 app.use('/api', usersRoutes);

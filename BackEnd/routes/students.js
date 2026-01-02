@@ -17,18 +17,27 @@ router.get('/students', (req, res) => {
 });
 
 // Lấy thông tin sinh viên theo user id  (LẤY THÔNG TIN CHO PHẦN MOUNTED)
+// routes/students.js
 router.get('/students/user/:id', (req, res) => {
   const { id } = req.params;
   const query = `
-    SELECT u.full_name, u.phone, s.current_address, s.year_start,c.class_name, d.department_name
+    SELECT s.student_id, s.year_start, s.current_address, s.class_id, c.class_name,
+           u.user_id, u.full_name, u.phone, u.department_id, d.department_name
     FROM students s
     JOIN users u ON s.user_id = u.user_id
-    JOIN classes c ON s.class_id = c.class_id
-    JOIN departments d ON u.department_id = d.department_id
+    LEFT JOIN classes c ON s.class_id = c.class_id
+    LEFT JOIN departments d ON u.department_id = d.department_id
     WHERE s.user_id = ?
+    LIMIT 1
   `;
   db.query(query, [id], (err, results) => {
-    if (err) return res.status(500).json({ error: err });
+    if (err) {
+      console.error('Error fetching student by user id:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: 'Không tìm thấy sinh viên' });
+    }
     res.json(results[0]);
   });
 });

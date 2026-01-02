@@ -35,6 +35,10 @@
 </template>
 
 <script>
+
+import axios from "axios";
+
+
 export default {
   data() {
     return { schedules: [] };
@@ -50,45 +54,36 @@ export default {
     },
     formatDate(dateString) {
       const d = new Date(dateString);
-      return d.toLocaleDateString("vi-VN"); // dd/MM/yyyy
+      return d.toLocaleDateString("vi-VN"); 
     },
-    handleFileUpload(event, schedule) {
-      const file = event.target.files[0];
-      if (!file) return;
+    handleFileUpload(e, schedule) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-      const isPDF = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
-      if (!isPDF) {
-        alert("Chỉ được phép thêm file PDF!");
-        event.target.value = "";
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("subject_id", schedule.subject_id);
-      formData.append("uploader_id", localStorage.getItem("user_id"));
-      formData.append("teacher_id", schedule.teacher_id || "");
-      formData.append("class_id", schedule.class_id || "");
-      formData.append("name", file.name);
-
-      fetch("http://localhost:8888/api/materials/upload", {
-        method: "POST",
-        body: formData
-      })
-        .then(res => {
-          if (!res.ok) throw new Error("Upload thất bại");
-          return res.json();
-        })
-        .then(data => {
-          alert("Upload thành công!");
-          console.log("Server trả về:", data);
-          event.target.value = "";
-        })
-        .catch(err => {
-          console.error("Lỗi upload:", err);
-          alert("Upload thất bại!");
-        });
+    if (file.type !== "application/pdf") {
+      alert("Chỉ được phép upload file PDF!");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("subject_id", schedule.subject_id);
+    formData.append("class_id", schedule.class_id);
+
+    axios.post("http://localhost:8888/api/materials/upload/test", formData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    })
+    .then(res => {
+      console.log("Upload thành công:", res.data);
+      alert("Upload thành công!");
+    })
+    .catch(err => {
+      console.error("Lỗi upload:", err);
+      alert("Upload thất bại!");
+    });
+  }
+
+
 
 
   }

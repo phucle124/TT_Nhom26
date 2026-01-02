@@ -43,7 +43,7 @@ export default {
 
         window.localStorage.clear()
 
-        alert("Đã đăng xuất thành công!");
+        
 
         window.location.href = '/login'
       }

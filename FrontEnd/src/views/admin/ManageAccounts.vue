@@ -1,5 +1,5 @@
 <template>
-  <div class="container py-5">
+  <div class="container py-5 page">
     <div class="card shadow">
       <div class="card-header bg-primary text-white">
         <h2 class="h5 mb-0">Quản lý tài khoản người dùng</h2>
@@ -353,6 +353,14 @@ export default {
 </script>
 
 <style scoped>
+
+.page{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+}
+
 form {
   margin: 20px auto;
   justify-items: auto;
